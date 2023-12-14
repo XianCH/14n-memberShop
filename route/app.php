@@ -13,23 +13,16 @@
 
 use think\facade\Route;
 
-// Route::get('think', function () {
-//     return 'hello,ThinkPHP6!';
-// });
+// test route
+// Route::get('test/get','Test/testHello');
+// Route::post('test/post','Test/testPost');
+// Route::post('test/postParams','Test/testGetParam');
+// Route::get('test/postRequest','Test/testRequest');
+// Route::get('test/request','Test/requesthas');
+// Route::post('test/json','Test/testJson');
+// Route::get('test/jsonResponse','Test/testJsonResponse');
+// Route::get('test/genToken','Test/test_gen_Token');
 
-// Route::get('hello/:name', 'index/hello');
-
-// Route::rule('new/:id','News/read');
-
-// Route::get('index','index');
-
-// Route::get('test', 'ControllerTest/apiResponse');
-
-// Route::get('testJson','index/returnJson');
-
-// Route::resource('blog', 'Blog')
-//     ->vars(['blog' => 'blog_id']);
-// Route::get('user/get-header', 'UserController@getHeader');
-
-
-Route::get('hello','HelloWorld/hello');
+//test exception
+// Route::get('TEST/exception','Test/testException');
+// api route

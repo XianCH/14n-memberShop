@@ -3,10 +3,10 @@ declare (strict_types = 1);
 
 namespace app;
 
+use Symfony\Component\VarDumper\Cloner\Data;
 use think\App;
 use think\exception\ValidateException;
 use think\Validate;
-
 /**
  * 控制器基础类
  */
@@ -90,5 +90,33 @@ abstract class BaseController
 
         return $v->failException(true)->check($data);
     }
+
+    /**
+     * 创建统一的Json响应
+     * 
+     */
+
+    // 成功响应
+    // protected function success($data , $message = '操作成功', $code)
+    // {
+    //     return $this->jsonResponse($data, $message, $code);
+    // }
+
+    // // 错误响应
+    // protected function error($message = '操作失败', $code = 400, $data = [])
+    // {
+    //     return $this->jsonResponse($data, $message, $code);
+    // }
+
+    // // 统一的 JSON 响应方法
+    // private function jsonResponse($data, $message, $code)
+    // {
+    //     $responseData = [
+    //         'code' => $code,
+    //         'message' => $message,
+    //         'data' => $data,
+    //     ];
+    //     return Response::create($responseData, 'json', $code);
+    // }
 
 }

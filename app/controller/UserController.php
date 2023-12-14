@@ -1,21 +1,28 @@
 <?php
+
 namespace app\controller;
+use think\facade\Request;
+use think\Response;
+use app\service\User;
 
-use think\Request;
+class UserController extends BaseController{
 
-class UserController
-{
-    function getHeader(){
-        $info = Request::header();
-    echo $info['accept'];
-    echo $info['accept-encoding'];
-    echo $info['user-agent'];
+    public function register(Request $request)
+    {}
 
+    function getEmail(){}
+
+    function verifyEmail(){}
+
+    function restartPassword(){}
+
+    function loginByEmail(){}
+
+
+
+    function loginById(){
+        $json = Request::getContent();
+        $loginData = json_decode($json,true);
+        
     }
-    function getHeaderAgant(){
-
-    }
-    
-
 }
-
