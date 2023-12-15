@@ -7,6 +7,8 @@ use think\Request;
 use think\facade\Request as req;
 use think\Validate;
 use app\common\JwtUtils;
+use think\facade\Cache;
+use think\Response;
 
 class TestController extends BaseController{
     public function testHello(){
@@ -36,7 +38,7 @@ class TestController extends BaseController{
                return json(['error' => 'Invalid credentials'], 401);
            }
     }
-
+    
     public function testJsonResponse(){
         // return $this->success();
         return $this->error($mesage = 'token验证失败');
@@ -88,4 +90,34 @@ class TestController extends BaseController{
         
     }
 
+    public function testRedis()
+    {
+        Cache::store('redis')->set('key', 'value', 2000);
+        $data = Cache::store('redis')->get('key');
+        return $data;
+    }
+
+    public function testRedisStru()
+    {
+        $userData = [
+            'id' => 123,
+            'name' => 'John Doe',
+            'email' => 'x14nch911@hotmail.com',
+            'age' => 20,
+        ];
+
+        // Set user data using hMSet
+        Cache::store('redis')->hMSet('user:' . $userData['id'], $userData);
+
+        // Get user data using hGetAll
+        $data = Cache::store('redis')->hGetAll('user:' . $userData['id']);
+
+        $jsonData = json_encode($data);
+        return Response::create($jsonData);
+    }
+
+    public function json2()
+    {
+        return json(['error' => 'SQL operation failed'], 500);
+    }
 }

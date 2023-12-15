@@ -3,6 +3,8 @@
 namespace app\controller;
 use think\Response;
 use think\Validate;
+use think\facade\Request;
+
 
 
 class BaseController {
@@ -28,8 +30,8 @@ class BaseController {
         return Response::create($responseData,'json',$code);
     }
 
-    protected $rule = [
-        'name'  =>  'require|max:25',
-        'email' =>  'email',
-    ];
+    // protected $rule = [
+    //     'name'  =>  'require|max:25',
+    //     'email' =>  'email',
+    // ];
 }
