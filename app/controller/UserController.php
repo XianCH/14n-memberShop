@@ -1,69 +1,114 @@
 <?php
 
 namespace app\controller;
-use think\facade\Request;
+
+use app\common\ResponseJson;
+use app\common\ServiceException;
+use think\facade\Request as FacadeRequest;
 use app\service\UserService;
-use think\Request as req;
-class UserController extends BaseController{
+use app\service\SystemService;
+use app\validate\UserRegister;
+use think\validate;
+
+class UserController extends BaseController
+{
 
     protected $userService;
+    protected $systemService;
 
-    // 通过构造函数依赖注入
-    public function __construct(UserService $userService)
+    public function __construct(UserService $userService, SystemService $systemService)
     {
+        $this->systemService = $systemService;
         $this->userService = $userService;
     }
 
-    /**
-     * username
-     * password
-     * email
-     * 
-     * return token
-     */
-    function register()
+    /*
+    ** @param email string
+    *
+    *@return code string
+    */
+    function sendEmailCode()
     {
-        $json = Request::getContent();
-        $registerData = json_decode($json);
-        if (empty($registerData->username) || empty($registerData->password)||empty($registerData->email)) {
-            return json(['error' => 'register empty'], 409);
-        }
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            return json(['error' => 'JSON ERROR'], 409);
+        $email = FacadeRequest::param('email');
+        if ($email == null) {
+            return ResponseJson::errorWithMsg('邮箱为空', 's01');
         }
 
-        $msg = $this->userService->UserRegister($registerData);
-        return $msg;
+        $this->systemService->sendEmailCode($email);
+        return ResponseJson::success($email);
     }
 
 
+    /*
+    * @param username string
+    * @param password string
+    * @param email string
+    *
+    * @return token string 
+    */
 
-    function sendEmailCode(){
-        $email = req->param('email');
-
-    }
-
-    function verifyEmailCode(){}
-
-    function restartPassword(){}
-
-    /**
-     * loginfunc->username/email
-     * password
-     * 
-     * return token
-     */
-    function login(){
-        $json = Request::getContent();
-        $loginData = json_decode($json);
-        $msg = $this->userService->LoginService($loginData);
-        return $msg;
-
-    }
-
-    function loginByEmail()
+    public function register()
     {
-        
+        //$json = FacadeRequest::getContent();
+        //$registerData = json_decode($json, true);  // 注意第二个参数设置为 true，将 JSON 转换为数组
+        //$username = FacadeRequest::param('username');
+        //$validator = new UserRegister();
+        //if (!$validator->check($registerData)) {
+        //  return ResponseJson::error($validator->getError());
+        //}
+        $username = FacadeRequest::param('username');
+        $password = FacadeRequest::param('password');
+        $email = FacadeRequest::param('email');
+        $result = $this->userService->UserRegister($username, $password, $email);
+        return ResponseJson::json($result['msg'], $result['data']);
     }
+}
+/**
+ * @param email string
+ * @param code string
+ *
+ * @return result 
+ */
+function verifyEmailCode()
+{
+    $email = FacadeRequest::param('email');
+    $code  = FacadeRequest::param('code');
+    $result = $this->systemService->verifyEmail($email, $code);
+    return ResponseJson::json($result);
+}
 
+/**
+ * @param username string
+ * @param password string
+ * 
+ * return token string
+ */
+function login()
+{
+    $json = FacadeRequest::getContent();
+    $loginData = json_decode($json);
+    $result = $this->userService->LoginService($loginData);
+    return ResponseJson::json($result);
+}
+
+
+/**
+ * @param uuid string
+ * @param password string
+ * @param newpassword string
+ *
+ * return succes or error  
+ */
+function restartPassword()
+{
+}
+
+/**
+ * @param email
+ * @param password string
+ *
+ * return jwt string
+ */
+function loginByEmail()
+{
 }
